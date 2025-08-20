@@ -22,8 +22,12 @@ pub fn Hero() -> Element {
         //         a { href: "https://discord.gg/XgGxMSkvUM", "👋 Community Discord" }
         //     }
         // }
-        Math {
-            tex: "{a} + {b} = {c}"
+        div {
+            id: "hero",
+            Math {
+                style: "font-size:5rem; color:#fff;",
+                tex: "{a} + {b} = {c}"
+            }
         }
     }
 }
