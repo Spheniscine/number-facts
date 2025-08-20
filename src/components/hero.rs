@@ -24,9 +24,14 @@ pub fn Hero() -> Element {
         // }
         div {
             id: "hero",
-            Math {
+            // Math {
+            //     style: "font-size:5rem; color:#fff;",
+            //     tex: "{a} + {b} = {c}"
+            // }
+
+            p {
                 style: "font-size:5rem; color:#fff;",
-                tex: "{a} + {b} = {c}"
+                "Find the number fact family using the buttons on the bottom"
             }
         }
     }
