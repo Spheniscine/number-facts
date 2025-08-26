@@ -36,7 +36,7 @@ pub fn Hero() -> Element {
             // },
 
             p {
-                style: "font-size:5rem; color:#fff;",
+                style: "font-size:5rem; color:#fff; padding: 3rem;",
                 "Find the number fact family using the buttons on the bottom"
             },
 
