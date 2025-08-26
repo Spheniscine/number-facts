@@ -19,10 +19,11 @@ body {
 
 #hero {
     position: relative;
-    background-color: #300;
+    background-color: #036;
     margin: 0;
     aspect-ratio: 9 / 16;
     width: 100rem;
+    padding: 3rem;
     display: flex;
     flex-direction: column;
     align-items: center;

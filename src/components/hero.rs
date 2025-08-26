@@ -29,9 +29,50 @@ pub fn Hero() -> Element {
             //     tex: "{a} + {b} = {c}"
             // }
 
+            // p {
+            //     style: "font-size:5rem; color:#fff;",
+            //     // "Addition and Subtraction: Up to 10"
+            //     "Multiplication and Division: 2 to 5 Multiples of 10"
+            // },
+
             p {
                 style: "font-size:5rem; color:#fff;",
                 "Find the number fact family using the buttons on the bottom"
+            },
+
+            for _ in 0..4 {
+                div {
+                    style: "border: 1rem solid #0063B1; border-radius: 1.5rem; font-size: 5rem; margin: 3rem; display: flex; flex-direction: row;",
+                    
+                    div {
+                        style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 3rem; padding: 2rem; color:#fff;
+                        width: 10rem; height: 10rem; line-height: 10rem; text-align: center;",
+                        Math { tex: "111" },
+                    },
+
+                    div {
+                        style: "border: 0.5rem solid #0063B1; border-radius: 50%; font-size: 5rem; margin: 3rem; padding: 2rem; color:#fff;
+                        width: 10rem; height: 10rem; line-height: 10rem; text-align: center;",
+                        Math { tex: "+" },
+                    },
+
+                    div {
+                        style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 3rem; padding: 2rem; color:#fff;
+                        width: 10rem; height: 10rem; line-height: 10rem; text-align: center;",
+                        Math { tex: "222" },
+                    },
+
+                    div {
+                        style: "font-size: 5rem; margin-top: 5rem; margin-bottom: 5rem; color:#fff; line-height: 10rem; text-align: center;",
+                        Math { tex: "=" },
+                    },
+
+                    div {
+                        style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 3rem; padding: 2rem; color:#fff;
+                        width: 10rem; height: 10rem; line-height: 10rem; text-align: center;",
+                        Math { tex: "333" },
+                    },
+                }
             }
         }
     }
