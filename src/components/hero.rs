@@ -110,6 +110,22 @@ pub fn Hero() -> Element {
                     Math { tex: "-" },
                 },
             }
+
+            div {
+                style: "font-size: 5rem; display: flex; flex-direction: row; margin-top: 1rem;",
+                
+                div {
+                    style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 2rem; padding: 2rem; color:#fff;
+                    width: 30rem; height: 6rem; line-height: 6rem; text-align: center;",
+                    "Undo"
+                },
+
+                div {
+                    style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 2rem; padding: 2rem; color:#fff;
+                    width: 30rem; height: 6rem; line-height: 6rem; text-align: center;",
+                    "Check"
+                },
+            }
         }
     }
 }
