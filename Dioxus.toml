@@ -1,6 +1,7 @@
 [application]
 
 [web.app]
+base_path = "number-facts"
 
 # HTML title tag content
 title = "number-facts"
