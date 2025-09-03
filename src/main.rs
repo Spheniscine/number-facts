@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 use rand::{rng, Rng};
 
 mod components;
+mod game;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
