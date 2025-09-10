@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use rand::{rng, Rng};
 
-use crate::components::Math;
+use crate::components::{operand::OperandValue, Math, OperandComponent};
 
 #[component]
 pub fn Hero() -> Element {
@@ -78,10 +78,8 @@ pub fn Hero() -> Element {
             div {
                 style: "font-size: 5rem; display: flex; flex-direction: row; margin-top: 2rem;",
                 
-                div {
-                    style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 2rem; padding: 2rem; color:#fff;
-                    width: 10rem; height: 10rem; line-height: 10rem; text-align: center;",
-                    Math { tex: "111" },
+                OperandComponent { 
+                    value: OperandValue::Filled(111),
                 },
 
                 div {
