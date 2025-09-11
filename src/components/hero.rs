@@ -79,7 +79,7 @@ pub fn Hero() -> Element {
                 style: "font-size: 5rem; display: flex; flex-direction: row; margin-top: 2rem;",
                 
                 OperandComponent { 
-                    value: OperandValue::Filled(111),
+                    value: OperandValue::Inactive,
                 },
 
                 div {
