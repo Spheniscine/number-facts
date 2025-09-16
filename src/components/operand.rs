@@ -24,5 +24,4 @@ pub fn OperandComponent(value: OperandValue) -> Element {
             },
         }
     }
-    
 }

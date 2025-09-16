@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use rand::{rng, Rng};
 
-use crate::components::{operand::OperandValue, Math, OperandComponent};
+use crate::{components::{operand::OperandValue, FactComponent, Math, OperandComponent}, game::{Fact, Op}};
 
 #[component]
 pub fn Hero() -> Element {
@@ -9,6 +9,9 @@ pub fn Hero() -> Element {
     let a = rng.random_range(0..10);
     let b = rng.random_range(0..10);
     let c = a + b;
+
+    let test_fact = Fact { operand1: Some(a), op: Some(Op::Plus), operand2: Some(b), result: Some(c), is_active: true };
+        
     rsx! {
         // div {
         //     id: "hero",
@@ -40,7 +43,11 @@ pub fn Hero() -> Element {
                 "Find the number fact family using the buttons on the bottom"
             },
 
-            for _ in 0..4 {
+            FactComponent {
+                fact: test_fact
+            },
+
+            for _ in 0..3 {
                 div {
                     style: "border: 1rem solid #0063B1; border-radius: 1.5rem; font-size: 5rem; margin: 2rem; display: flex; flex-direction: row;",
                     

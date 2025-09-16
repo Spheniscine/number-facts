@@ -1,5 +1,5 @@
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Op {
     Plus, Minus, Times, Divide
 }
