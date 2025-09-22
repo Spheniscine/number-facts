@@ -1,6 +1,6 @@
 use super::Op;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Fact {
     pub operand1: Option<i32>,
     pub op: Option<Op>,
