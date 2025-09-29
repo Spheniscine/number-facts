@@ -48,6 +48,9 @@ impl GameState {
             },
         ];
 
+        let mut facts = [Fact::default(); 4];
+        facts[0].is_active = true;
+
         let mut operands = [a, b, c];
         let mut ops = [Op::Plus, Op::Minus];
 
@@ -55,6 +58,65 @@ impl GameState {
         operands.shuffle(rng);
         ops.shuffle(rng);
 
-        GameState { facts: solution.clone(), solution, operands, ops }
+        GameState { facts, solution, operands, ops }
+    }
+
+    fn update_active(&mut self) {
+        let x = (0..self.facts.len()).find(|&i| {
+            !self.facts[i].is_complete()
+        });
+        for i in 0..self.facts.len() {
+            self.facts[i].is_active = x == Some(i);
+        }
+    }
+
+    pub fn click_operand(&mut self, value: i32) -> bool {
+        let mut ok = false;
+        for i in 0..self.facts.len() {
+            if self.facts[i].operand1.is_none() {
+                self.facts[i].operand1 = Some(value);
+                ok = true;
+                break;
+            }
+            if self.facts[i].op.is_none() {
+                return false;
+            }
+            if self.facts[i].operand2.is_none() {
+                self.facts[i].operand2 = Some(value);
+                ok = true;
+                break;
+            }
+            if self.facts[i].result.is_none() {
+                self.facts[i].result = Some(value);
+                ok = true;
+                break;
+            }
+        }
+
+        if ok { self.update_active(); }
+        ok
+    }
+
+    pub fn click_op(&mut self, value: Op) -> bool {
+        let mut ok = false;
+        for i in 0..self.facts.len() {
+            if self.facts[i].operand1.is_none() {
+                return false;
+            }
+            if self.facts[i].op.is_none() {
+                self.facts[i].op = Some(value);
+                ok = true;
+                break;
+            }
+            if self.facts[i].operand2.is_none() {
+                return false;
+            }
+            if self.facts[i].result.is_none() {
+                return false;
+            }
+        }
+
+        if ok { self.update_active(); }
+        ok
     }
 }
