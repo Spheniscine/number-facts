@@ -2,6 +2,7 @@ use rand::{rng, seq::SliceRandom};
 
 use super::{Fact, Op};
 
+#[derive(Clone, Copy, Debug)]
 pub struct GameState {
     pub facts: [Fact; 4],
     pub solution: [Fact; 4],

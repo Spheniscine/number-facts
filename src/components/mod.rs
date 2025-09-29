@@ -12,3 +12,9 @@ pub use op::*;
 
 mod fact;
 pub use fact::*;
+
+mod operand_entity;
+pub use operand_entity::*;
+
+mod op_entity;
+pub use op_entity::*;
