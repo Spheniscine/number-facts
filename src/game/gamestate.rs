@@ -120,4 +120,33 @@ impl GameState {
         if ok { self.update_active(); }
         ok
     }
+
+    pub fn undo(&mut self) -> bool {
+        let mut ok = false;
+        for i in (0..self.facts.len()).rev() {
+            if self.facts[i].result.is_some() {
+                self.facts[i].result = None;
+                ok = true;
+                break;
+            }
+            if self.facts[i].operand2.is_some() {
+                self.facts[i].operand2 = None;
+                ok = true;
+                break;
+            }
+            if self.facts[i].op.is_some() {
+                self.facts[i].op = None;
+                ok = true;
+                break;
+            }
+            if self.facts[i].operand1.is_some() {
+                self.facts[i].operand1 = None;
+                ok = true;
+                break;
+            }
+        }
+
+        if ok { self.update_active(); }
+        ok
+    }
 }
