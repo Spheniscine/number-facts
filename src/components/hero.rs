@@ -57,8 +57,8 @@ pub fn Hero() -> Element {
                 }
 
                 div {
-                    style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 2rem; padding: 2rem; color:#fff;
-                    width: 30rem; height: 6rem; line-height: 6rem; text-align: center;",
+                    style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 2rem; padding: 2rem; color:#99b;
+                    width: 30rem; height: 6rem; line-height: 6rem; text-align: center; background-color: #779;",
                     "Check"
                 },
             }
