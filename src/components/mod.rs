@@ -19,5 +19,8 @@ pub use operand_entity::*;
 mod op_entity;
 pub use op_entity::*;
 
+mod button;
+pub use button::*;
+
 mod undo;
 pub use undo::*;
