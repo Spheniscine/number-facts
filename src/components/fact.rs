@@ -47,20 +47,27 @@ pub fn FactComponent(fact: Fact) -> Element {
 
     rsx! {
         div {
-            style: "border: 1rem solid #0063B1; {bgcol} border-radius: 1.5rem; font-size: 5rem; margin: 2rem; display: flex; flex-direction: row;",
-            
-            OperandComponent { value: operand1 },
-
-            OpComponent { value: op },
-
-            OperandComponent { value: operand2 },
-
+            style: "display: flex; flex-direction: row;",
             div {
-                style: "font-size: 5rem; margin-top: 4rem; margin-bottom: 4rem; color:#fff; line-height: 10rem; text-align: center;",
-                Math { tex: "=" },
-            },
+                style: "border: 1rem solid #0063B1; {bgcol} border-radius: 1.5rem; font-size: 5rem; margin: 2rem; display: flex; flex-direction: row;",
+                
+                OperandComponent { value: operand1 },
 
-            OperandComponent { value: result },
+                OpComponent { value: op },
+
+                OperandComponent { value: operand2 },
+
+                div {
+                    style: "font-size: 5rem; margin-top: 4rem; margin-bottom: 4rem; color:#fff; line-height: 10rem; text-align: center;",
+                    Math { tex: "=" },
+                },
+
+                OperandComponent { value: result },
+            }
+            img {
+                src: asset!("/assets/images/fa-repeat.svg"),
+                style: "height: 7rem; width: 7rem;"
+            }
         }
     }
 }
