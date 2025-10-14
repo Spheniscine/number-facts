@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use rand::{rng, Rng};
 
-use crate::{components::{operand::OperandValue, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Op}};
+use crate::{components::{operand::OperandValue, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Op}};
 
 #[component]
 pub fn Hero() -> Element {
@@ -54,12 +54,10 @@ pub fn Hero() -> Element {
                 
                 Undo { 
                     game_state,
-                }
+                },
 
-                div {
-                    style: "border: 0.5rem solid #0063B1; border-radius: 1rem; font-size: 5rem; margin: 2rem; padding: 2rem; color:#99b;
-                    width: 30rem; height: 6rem; line-height: 6rem; text-align: center; background-color: #779;",
-                    "Check"
+                Check { 
+                    game_state,
                 },
             }
         }

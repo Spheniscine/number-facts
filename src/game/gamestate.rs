@@ -149,4 +149,8 @@ impl GameState {
         if ok { self.update_active(); }
         ok
     }
+
+    pub fn is_complete(&self) -> bool {
+        self.facts.iter().all(|fact| fact.is_complete())
+    }
 }

@@ -24,3 +24,6 @@ pub use button::*;
 
 mod undo;
 pub use undo::*;
+
+mod check;
+pub use check::*;
