@@ -66,7 +66,7 @@ pub fn FactComponent(fact: Fact) -> Element {
             }
             img {
                 src: asset!("/assets/images/fa-repeat.svg"),
-                style: "height: 7rem; width: 7rem;"
+                style: "height: 7rem; width: 7rem; position: relative; top: 8.5rem;"
             }
         }
     }
