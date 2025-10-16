@@ -28,6 +28,7 @@ pub fn Hero() -> Element {
             for i in 0..state.facts.len() {
                 FactComponent { 
                     fact: state.facts[i].clone(),
+                    mark: state.marks.map(|marks| marks[i]),
                 }
             }
 

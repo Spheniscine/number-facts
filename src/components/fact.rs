@@ -1,10 +1,53 @@
 use dioxus::prelude::*;
 
-use crate::{components::{Math, OpComponent, OpValue, OperandComponent, OperandValue}, game::Fact};
+use crate::{components::{Math, OpComponent, OpValue, OperandComponent, OperandValue}, game::{Fact, Mark}};
 
 #[component]
-pub fn FactComponent(fact: Fact) -> Element {
-    let bgcol = if fact.is_active {"background-color: #048;"} else {""};
+pub fn FactComponent(fact: Fact, mark: Option<Mark>) -> Element {
+    let bgcol = match mark {
+        Some(Mark::Correct) => {
+            "background-color: #080;"
+        }
+        Some(Mark::Wrong) => {
+            "background-color: #800;"
+        }
+        Some(Mark::Repeat) => {
+            "background-color: #800;"
+        }
+        None => {
+            if fact.is_active {"background-color: #048;"} else {""}
+        }
+    };
+
+    let bordercol = match mark {
+        Some(Mark::Correct) => {
+            "#0a0"
+        }
+        Some(Mark::Wrong) => {
+            "#a00"
+        }
+        Some(Mark::Repeat) => {
+            "#a00"
+        }
+        None => {
+            "#0063B1"
+        }
+    };
+
+    let image = match mark {
+        Some(Mark::Correct) => {
+            asset!("/assets/images/fa-check.svg")
+        }
+        Some(Mark::Wrong) => {
+            asset!("/assets/images/fa-xmark.svg")
+        }
+        Some(Mark::Repeat) => {
+            asset!("/assets/images/fa-repeat.svg")
+        }
+        None => {
+            asset!("/assets/images/blank.svg")
+        }
+    };
 
     let mut next_active = fact.is_active;
 
@@ -49,7 +92,7 @@ pub fn FactComponent(fact: Fact) -> Element {
         div {
             style: "display: flex; flex-direction: row;",
             div {
-                style: "border: 1rem solid #0063B1; {bgcol} border-radius: 1.5rem; font-size: 5rem; margin: 2rem; display: flex; flex-direction: row;",
+                style: "border: 1rem solid {bordercol}; {bgcol} border-radius: 1.5rem; font-size: 5rem; margin: 2rem; display: flex; flex-direction: row;",
                 
                 OperandComponent { value: operand1 },
 
@@ -65,7 +108,7 @@ pub fn FactComponent(fact: Fact) -> Element {
                 OperandComponent { value: result },
             }
             img {
-                src: asset!("/assets/images/blank.svg"),
+                src: image,
                 style: "height: 7rem; width: 7rem; position: relative; top: 8.5rem;"
             }
         }
