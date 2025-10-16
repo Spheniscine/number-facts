@@ -65,7 +65,7 @@ pub fn FactComponent(fact: Fact) -> Element {
                 OperandComponent { value: result },
             }
             img {
-                src: asset!("/assets/images/fa-repeat.svg"),
+                src: asset!("/assets/images/blank.svg"),
                 style: "height: 7rem; width: 7rem; position: relative; top: 8.5rem;"
             }
         }
