@@ -1,6 +1,6 @@
 use rand::{rng, seq::SliceRandom};
 
-use super::{Fact, Op};
+use super::{Fact, Mark, Op};
 
 #[derive(Clone, Copy, Debug)]
 pub struct GameState {
@@ -8,6 +8,7 @@ pub struct GameState {
     pub solution: [Fact; 4],
     pub operands: [i32; 3],
     pub ops: [Op; 2],
+    pub marks: Option<[Mark; 4]>,
 }
 
 impl GameState {
@@ -59,7 +60,7 @@ impl GameState {
         operands.shuffle(rng);
         ops.shuffle(rng);
 
-        GameState { facts, solution, operands, ops }
+        GameState { facts, solution, operands, ops, marks: None }
     }
 
     fn update_active(&mut self) {
