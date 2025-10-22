@@ -57,5 +57,12 @@ body {
     max-width: 1200px;
 }
 
-
+#preloaded-images {
+   position: absolute;
+   overflow: hidden;
+   left: -9999rem; 
+   top: -9999rem;
+   height: 1px;
+   width: 1px;
+}
 

@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use crate::{components::{Math, OpComponent, OpValue, OperandComponent, OperandValue}, game::{Fact, Mark}};
+use crate::{components::{Math, OpComponent, OpValue, OperandComponent, OperandValue}, game::{Fact, Mark, OptionMarkExt}};
 
 #[component]
 pub fn FactComponent(fact: Fact, mark: Option<Mark>) -> Element {
@@ -34,20 +34,7 @@ pub fn FactComponent(fact: Fact, mark: Option<Mark>) -> Element {
         }
     };
 
-    let image = match mark {
-        Some(Mark::Correct) => {
-            asset!("/assets/images/fa-check.svg")
-        }
-        Some(Mark::Wrong) => {
-            asset!("/assets/images/fa-xmark.svg")
-        }
-        Some(Mark::Repeat) => {
-            asset!("/assets/images/fa-repeat.svg")
-        }
-        None => {
-            asset!("/assets/images/blank.svg")
-        }
-    };
+    let image = mark.image_asset();
 
     let mut next_active = fact.is_active;
 

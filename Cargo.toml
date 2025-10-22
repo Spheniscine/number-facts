@@ -18,6 +18,7 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 web-sys = { version = "0.3.77", features = ["Window", "Storage", "HtmlAudioElement"] }
 indexmap = { version = "2.10.0", features = ["serde"] }
+extension-traits = "2.0.1"
 
 [features]
 default = ["web"]

@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate extension_traits;
+
 use components::{Hero, Math};
 use dioxus::prelude::*;
 use rand::{rng, Rng};

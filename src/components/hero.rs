@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 use rand::{rng, Rng};
+use strum::IntoEnumIterator;
 
-use crate::{components::{operand::OperandValue, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Op}};
+use crate::{components::{operand::OperandValue, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt}};
 
 #[component]
 pub fn Hero() -> Element {
@@ -60,7 +61,19 @@ pub fn Hero() -> Element {
                 Check { 
                     game_state,
                 },
-            }
+            },
+
+            div {
+                id: "preloaded-images",
+
+                for mark in Mark::iter().map(|mark| Some(mark)).chain([None]) {
+                    img {
+                        src: mark.image_asset(),
+                        width: 1,
+                        height: 1,
+                    }
+                }
+            },
         }
     }
 }
