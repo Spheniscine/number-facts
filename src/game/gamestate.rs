@@ -154,4 +154,21 @@ impl GameState {
     pub fn is_complete(&self) -> bool {
         self.facts.iter().all(|fact| fact.is_complete())
     }
+
+    pub fn check(&mut self) {
+        if !self.is_complete() { return; }
+        let mut used = [false; 4];
+        let mut marks = [Mark::Correct; 4];
+        for i in 0..4 {
+            let j = (0..4).find(|&j| !used[j] && self.facts[i] == self.solution[j]);
+            if let Some(j) = j {
+                used[j] = true;
+                marks[i] = Mark::Correct;
+            } else {
+                let rep = (0..4).any(|j| self.facts[i] == self.solution[j]);
+                marks[i] = if rep {Mark::Repeat} else {Mark::Wrong};
+            }
+        }
+        self.marks = Some(marks);
+    }
 }
