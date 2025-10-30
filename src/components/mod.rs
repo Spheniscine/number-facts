@@ -27,3 +27,6 @@ pub use undo::*;
 
 mod check;
 pub use check::*;
+
+mod advance;
+pub use advance::*;

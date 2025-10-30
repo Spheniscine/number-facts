@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use rand::{rng, Rng};
 use strum::IntoEnumIterator;
 
-use crate::{components::{operand::OperandValue, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt}};
+use crate::{components::{operand::OperandValue, Advance, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt}};
 
 #[component]
 pub fn Hero() -> Element {
@@ -49,18 +49,24 @@ pub fn Hero() -> Element {
                         game_state,
                     },
                 }
-            }
+            },
 
             div {
                 style: "font-size: 5rem; display: flex; flex-direction: row; margin-top: 1rem;",
-                
-                Undo { 
-                    game_state,
-                },
 
-                Check { 
-                    game_state,
-                },
+                if game_state.read().is_checked() {
+                    Advance {
+                        game_state,
+                    },
+                } else {
+                    Undo { 
+                        game_state,
+                    },
+
+                    Check { 
+                        game_state,
+                    },
+                }
             },
 
             div {

@@ -171,4 +171,17 @@ impl GameState {
         }
         self.marks = Some(marks);
     }
+
+    pub fn is_checked(&self) -> bool {
+        self.marks.is_some()
+    }
+
+    pub fn is_correct(&self) -> bool {
+        self.marks == Some([Mark::Correct; 4])
+    }
+
+    pub fn advance(&mut self) {
+        if !self.is_complete() { return; }
+        // todo
+    }
 }

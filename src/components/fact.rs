@@ -12,7 +12,7 @@ pub fn FactComponent(fact: Fact, mark: Option<Mark>) -> Element {
             "background-color: #800;"
         }
         Some(Mark::Repeat) => {
-            "background-color: #800;"
+            "background-color: #840;"
         }
         None => {
             if fact.is_active {"background-color: #048;"} else {""}
@@ -27,7 +27,7 @@ pub fn FactComponent(fact: Fact, mark: Option<Mark>) -> Element {
             "#a00"
         }
         Some(Mark::Repeat) => {
-            "#a00"
+            "#a50"
         }
         None => {
             "#0063B1"
