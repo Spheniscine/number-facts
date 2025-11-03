@@ -1,14 +1,15 @@
 use rand::{rng, seq::SliceRandom};
 
-use super::{Fact, Mark, Op};
+use super::{Audio, Fact, Feedback, FeedbackImpl, Mark, Op};
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct GameState {
     pub facts: [Fact; 4],
     pub solution: [Fact; 4],
     pub operands: [i32; 3],
     pub ops: [Op; 2],
     pub marks: Option<[Mark; 4]>,
+    pub feedback: FeedbackImpl,
 }
 
 impl GameState {
@@ -60,7 +61,7 @@ impl GameState {
         operands.shuffle(rng);
         ops.shuffle(rng);
 
-        GameState { facts, solution, operands, ops, marks: None }
+        GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. } }
     }
 
     fn update_active(&mut self) {
@@ -170,6 +171,11 @@ impl GameState {
             }
         }
         self.marks = Some(marks);
+        if self.is_correct() {
+            self.feedback.play_audio(Audio::Correct);
+        } else {
+            self.feedback.play_audio(Audio::Wrong);
+        }
     }
 
     pub fn is_checked(&self) -> bool {

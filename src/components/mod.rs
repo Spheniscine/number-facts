@@ -30,3 +30,6 @@ pub use check::*;
 
 mod advance;
 pub use advance::*;
+
+mod audio_preloader;
+pub use audio_preloader::AudioPreloader;
