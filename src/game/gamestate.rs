@@ -64,6 +64,61 @@ impl GameState {
         GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. } }
     }
 
+    fn generate_test(&mut self) {
+        let rng = &mut rng();
+
+        let a = 1;
+        let b = 2;
+        let c = a + b;
+
+        let mut solution = [
+            Fact {
+                operand1: Some(a),
+                op: Some(Op::Plus),
+                operand2: Some(b),
+                result: Some(c),
+                is_active: false,
+            },
+            Fact {
+                operand1: Some(b),
+                op: Some(Op::Plus),
+                operand2: Some(a),
+                result: Some(c),
+                is_active: false,
+            },
+            Fact {
+                operand1: Some(c),
+                op: Some(Op::Minus),
+                operand2: Some(a),
+                result: Some(b),
+                is_active: false,
+            },
+            Fact {
+                operand1: Some(c),
+                op: Some(Op::Minus),
+                operand2: Some(b),
+                result: Some(a),
+                is_active: false,
+            },
+        ];
+
+        let mut facts = [Fact::default(); 4];
+        facts[0].is_active = true;
+
+        let mut operands = [a, b, c];
+        let mut ops = [Op::Plus, Op::Minus];
+
+        solution.sort();
+        operands.shuffle(rng);
+        ops.shuffle(rng);
+
+        self.facts = facts;
+        self.solution = solution;
+        self.operands = operands;
+        self.ops = ops;
+        self.marks = None;
+    }
+
     fn update_active(&mut self) {
         let x = (0..self.facts.len()).find(|&i| {
             !self.facts[i].is_complete()
@@ -188,6 +243,19 @@ impl GameState {
 
     pub fn advance(&mut self) {
         if !self.is_complete() { return; }
-        // todo
+        
+        if self.is_correct() {
+            self.generate_test(); // todo
+        } else {
+            let mut facts = [Fact::default(); 4];
+
+            for (i, f) in (0..4).filter(|&i| self.marks.map(|m| m[i]) == Some(Mark::Correct)).zip(&mut facts) {
+                *f = self.facts[i]
+            }
+
+            self.facts = facts;
+            self.marks = None;
+            self.update_active();
+        }
     }
 }
