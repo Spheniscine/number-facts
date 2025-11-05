@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use rand::{rng, Rng};
 use strum::IntoEnumIterator;
 
-use crate::{components::{operand::OperandValue, Advance, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt}};
+use crate::{components::{operand::OperandValue, Advance, AudioPreloader, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt}};
 
 #[component]
 pub fn Hero() -> Element {
@@ -13,11 +13,13 @@ pub fn Hero() -> Element {
 
     // let test_fact = Fact { operand1: Some(a), op: Some(Op::Plus), operand2: Some(b), result: Some(c), is_active: true };
     let mut game_state = use_signal(|| {
-        GameState::new_test()
+        GameState::new()
     });
     let state = game_state();
         
     rsx! {
+        AudioPreloader {  }
+
         div {
             id: "hero",
 

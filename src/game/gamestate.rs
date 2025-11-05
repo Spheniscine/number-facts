@@ -1,4 +1,4 @@
-use rand::{rng, seq::SliceRandom};
+use rand::{rng, seq::SliceRandom, Rng};
 
 use super::{Audio, Fact, Feedback, FeedbackImpl, Mark, Op};
 
@@ -13,63 +13,31 @@ pub struct GameState {
 }
 
 impl GameState {
-    pub fn new_test() -> Self {
-        let rng = &mut rng();
-
-        let a = 1;
-        let b = 2;
-        let c = a + b;
-
-        let mut solution = [
-            Fact {
-                operand1: Some(a),
-                op: Some(Op::Plus),
-                operand2: Some(b),
-                result: Some(c),
-                is_active: false,
-            },
-            Fact {
-                operand1: Some(b),
-                op: Some(Op::Plus),
-                operand2: Some(a),
-                result: Some(c),
-                is_active: false,
-            },
-            Fact {
-                operand1: Some(c),
-                op: Some(Op::Minus),
-                operand2: Some(a),
-                result: Some(b),
-                is_active: false,
-            },
-            Fact {
-                operand1: Some(c),
-                op: Some(Op::Minus),
-                operand2: Some(b),
-                result: Some(a),
-                is_active: false,
-            },
-        ];
+    pub fn new() -> Self {
+        let mut solution = [Fact::default(); 4];
 
         let mut facts = [Fact::default(); 4];
-        facts[0].is_active = true;
 
-        let mut operands = [a, b, c];
+        let mut operands = [0, 0, 0];
         let mut ops = [Op::Plus, Op::Minus];
 
-        solution.sort();
-        operands.shuffle(rng);
-        ops.shuffle(rng);
-
-        GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. } }
+        let mut res = GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. } };
+        res.generate_test();
+        res
     }
 
     fn generate_test(&mut self) {
+        let limit = 10;
         let rng = &mut rng();
+        let (a, b, c) = loop {
+            let mut x = rng.random_range(0..=limit);
+            let mut y = rng.random_range(0..limit);
+            if y >= x { y += 1; }
+            if y < x { std::mem::swap(&mut x, &mut y); }
+            if y - x == x { continue; }
 
-        let a = 1;
-        let b = 2;
-        let c = a + b;
+            break (x, y-x, y);
+        };
 
         let mut solution = [
             Fact {
