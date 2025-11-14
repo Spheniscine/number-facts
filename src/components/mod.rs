@@ -33,3 +33,6 @@ pub use advance::*;
 
 mod audio_preloader;
 pub use audio_preloader::AudioPreloader;
+
+mod settings;
+pub use settings::*;

@@ -1,6 +1,12 @@
 use rand::{rng, seq::SliceRandom, Rng};
+use serde::{Deserialize, Serialize};
 
 use super::{Audio, Fact, Feedback, FeedbackImpl, Mark, Op};
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum ScreenState {
+    Game, Settings
+}
 
 #[derive(Clone, Debug)]
 pub struct GameState {
@@ -10,6 +16,8 @@ pub struct GameState {
     pub ops: [Op; 2],
     pub marks: Option<[Mark; 4]>,
     pub feedback: FeedbackImpl,
+    pub screen_state: ScreenState,
+    pub settings_cancelable: bool,
 }
 
 impl GameState {
@@ -21,7 +29,8 @@ impl GameState {
         let mut operands = [0, 0, 0];
         let mut ops = [Op::Plus, Op::Minus];
 
-        let mut res = GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. } };
+        let mut res = GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. },
+            screen_state: ScreenState::Game, settings_cancelable: true };
         res.generate_test();
         res
     }
