@@ -61,7 +61,7 @@ body {
     display: none;
 }
 
-.radio-buttons span {
+.radio-buttons span.inner {
     display: inline-block;
     margin: 0.5rem;
     padding-left: 1.5rem;
@@ -73,7 +73,7 @@ body {
     text-align: center;
 }
 
-.radio-buttons input[type="radio"]:checked + span {
+.radio-buttons input[type="radio"]:checked + span.inner {
     background-color: #0063B1;
     color: #fff;
 }

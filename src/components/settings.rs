@@ -3,7 +3,7 @@ use std::rc::Rc;
 use dioxus::{logger::tracing, prelude::*};
 use strum::IntoEnumIterator;
 
-use crate::game::{Feedback, GameState, ScreenState};
+use crate::{components::Math, game::{Feedback, GameState, ScreenState}};
 
 #[component]
 pub fn RadioButton(name: String, value: String, children: Element) -> Element {
@@ -27,6 +27,7 @@ pub fn RadioButton(name: String, value: String, children: Element) -> Element {
                 // checked,
             },
             span { 
+                class: "inner",
                 {children}
             },
         },
@@ -51,23 +52,57 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
             // if let Difficulty::Legacy(difficulty) = game_state.read().difficulty {
                 p {
                     class: "radio-buttons",
-                    "Operation:",
+                    "Operations: ",
                     RadioButton {  
-                        name: "OP",
-                        value: "op",
-                        "op",
+                        name: "op",
+                        value: "plus",
+                        Math {tex: "+"}, " and ", Math {tex: "-"},
                     },
+                    " "
                     RadioButton {  
-                        name: "OP",
-                        value: "op2",
-                        "op2",
+                        name: "op",
+                        value: "times",
+                        Math {tex: "\\times"}, " and ", Math {tex: "\\div"},
                     },
                 },
-            // } else {
-            //     p {
-            //         "TODO new addition skill levels"
-            //     }
-            // }
+                p {
+                    class: "radio-buttons",
+                    RadioButton {
+                        name: "limit",
+                        value: "10",
+                        "Up to ", Math {tex: "10"},
+                    },
+                    br {},
+                    RadioButton {  
+                        name: "limit",
+                        value: "20",
+                        "Up to ", Math {tex: "20"},
+                    },
+                    br {},
+                    RadioButton {  
+                        name: "limit",
+                        value: "50",
+                        "Up to ", Math {tex: "50"},
+                    },
+                    br {},
+                    RadioButton {  
+                        name: "limit",
+                        value: "100",
+                        "Up to ", Math {tex: "100"},
+                    },
+                    br {},
+                    RadioButton {  
+                        name: "limit",
+                        value: "10_100",
+                        "Tens up to ", Math {tex: "100"},
+                    },
+                    br {},
+                    RadioButton {  
+                        name: "limit",
+                        value: "neg_10",
+                        "Negative to ", Math {tex: "-10"},
+                    },
+                },
 
             p { 
                 "Generate new problems: ",
