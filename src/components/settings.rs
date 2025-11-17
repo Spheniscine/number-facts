@@ -42,7 +42,7 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
         }
         div {
             id: "settingsDialog",
-            style: "margin: 1.5%; padding: 5rem; width: 91.5%; height: 85%; background-color: #ccc; font-size: 5rem;
+            style: "margin: 2%; padding: 5rem; width: 87%; height: 92%; background-color: #ccc; font-size: 5rem;
                 line-height: 9rem;
                 color: #000; border-radius: 2rem;",
             tabindex: -1,

@@ -30,7 +30,7 @@ impl GameState {
         let mut ops = [Op::Plus, Op::Minus];
 
         let mut res = GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. },
-            screen_state: ScreenState::Game, settings_cancelable: true };
+            screen_state: ScreenState::Settings, settings_cancelable: true };
         res.generate_test();
         res
     }

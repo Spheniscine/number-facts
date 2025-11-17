@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use rand::{rng, Rng};
 use strum::IntoEnumIterator;
 
-use crate::{components::{operand::OperandValue, Advance, AudioPreloader, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Settings, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt}};
+use crate::{components::{operand::OperandValue, Advance, AudioPreloader, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Settings, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt, ScreenState}};
 
 #[component]
 pub fn Hero() -> Element {
@@ -20,12 +20,14 @@ pub fn Hero() -> Element {
     rsx! {
         AudioPreloader {  }
 
-        Settings {
-            game_state,
-        }
-
-        // TODO
-        if "TODO" == "Reenable this later" {
+        if game_state().screen_state == ScreenState::Settings {
+            div {
+                id: "hero",
+                Settings {
+                    game_state,
+                }
+            }
+        } else {
             div {
                 id: "hero",
 
