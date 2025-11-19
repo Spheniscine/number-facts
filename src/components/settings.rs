@@ -6,7 +6,7 @@ use strum::IntoEnumIterator;
 use crate::{components::Math, game::{Feedback, GameState, ScreenState}};
 
 #[component]
-pub fn RadioButton(name: String, value: String, children: Element) -> Element {
+pub fn RadioButton(name: String, value: String, width: Option<i32>, children: Element) -> Element {
     // let checked = state.read().difficulty_options.get(&name) == Some(&value);
 
     // let name_ref = name.clone(); let value_ref = value.clone();
@@ -18,6 +18,8 @@ pub fn RadioButton(name: String, value: String, children: Element) -> Element {
     //         state.write().difficulty_options.insert(LegacyDifficulty::STR_ADDEND_RANGE.into(), "1,1".into());
     //     }
     // };
+    let style = if let Some(width) = width {format!("width: {width}rem;")} else {String::new()};
+
     rsx! {
         label {
             input {
@@ -27,6 +29,7 @@ pub fn RadioButton(name: String, value: String, children: Element) -> Element {
                 // checked,
             },
             span { 
+                style,
                 class: "inner",
                 {children}
             },
@@ -68,36 +71,42 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                 p {
                     class: "radio-buttons",
                     RadioButton {
+                        width: 75,
                         name: "limit",
                         value: "10",
                         "Up to ", Math {tex: "10"},
                     },
                     br {},
                     RadioButton {  
+                        width: 75,
                         name: "limit",
                         value: "20",
                         "Up to ", Math {tex: "20"},
                     },
                     br {},
                     RadioButton {  
+                        width: 75,
                         name: "limit",
                         value: "50",
                         "Up to ", Math {tex: "50"},
                     },
                     br {},
                     RadioButton {  
+                        width: 75,
                         name: "limit",
                         value: "100",
                         "Up to ", Math {tex: "100"},
                     },
                     br {},
                     RadioButton {  
+                        width: 75,
                         name: "limit",
                         value: "10_100",
                         "Tens up to ", Math {tex: "100"},
                     },
                     br {},
                     RadioButton {  
+                        width: 75,
                         name: "limit",
                         value: "neg_10",
                         "Negative to ", Math {tex: "-10"},
