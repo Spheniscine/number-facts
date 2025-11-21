@@ -12,3 +12,6 @@ pub use feedback::*;
 
 mod gamestate;
 pub use gamestate::*;
+
+mod difficulty;
+pub use difficulty::*;
