@@ -1,78 +1,92 @@
+use std::sync::OnceLock;
+
+use serde::{Deserialize, Serialize};
+
 use super::Op;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum StringKind {
     Normal, Math
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Difficulty {
     pub op: Op,
     pub low: i32,
     pub high: i32,
     pub multiplier: i32,
-    pub description: &'static [(StringKind, &'static str)]
+    pub description: Vec<(StringKind, String)>
 }
 
-pub const ADDITION_DIFFICULTIES: &[Difficulty] = &[
-    Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: 1, description: &[
-        (StringKind::Normal, "Up to "),
-        (StringKind::Math, "10",)
-    ] },
+pub fn addition_difficulties() -> &'static [Difficulty] {
+    static MEM: OnceLock<Vec<Difficulty>> = OnceLock::new();
+    MEM.get_or_init(|| {
+        vec![
+            Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: 1, description: vec![
+                (StringKind::Normal, "Up to ".to_string()),
+                (StringKind::Math, "10".to_string(),)
+            ] },
 
-    Difficulty { op: Op::Plus, low: 0, high: 20, multiplier: 1, description: &[
-        (StringKind::Normal, "Up to "),
-        (StringKind::Math, "20"),
-    ] },
+            Difficulty { op: Op::Plus, low: 0, high: 20, multiplier: 1, description: vec![
+                (StringKind::Normal, "Up to ".to_string()),
+                (StringKind::Math, "20".to_string()),
+            ] },
 
-    Difficulty { op: Op::Plus, low: 0, high: 50, multiplier: 1, description: &[
-        (StringKind::Normal, "Up to "),
-        (StringKind::Math, "50"),
-    ] },
+            Difficulty { op: Op::Plus, low: 0, high: 50, multiplier: 1, description: vec![
+                (StringKind::Normal, "Up to ".to_string()),
+                (StringKind::Math, "50".to_string()),
+            ] },
 
-    Difficulty { op: Op::Plus, low: 0, high: 100, multiplier: 1, description: &[
-        (StringKind::Normal, "Up to "),
-        (StringKind::Math, "100"),
-    ] },
+            Difficulty { op: Op::Plus, low: 0, high: 100, multiplier: 1, description: vec![
+                (StringKind::Normal, "Up to ".to_string()),
+                (StringKind::Math, "100".to_string()),
+            ] },
 
-    Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: 10, description: &[
-        (StringKind::Normal, "Tens up to "),
-        (StringKind::Math, "100"),
-    ] },
+            Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: 10, description: vec![
+                (StringKind::Normal, "Tens up to ".to_string()),
+                (StringKind::Math, "100".to_string()),
+            ] },
 
-    Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: -1, description: &[
-        (StringKind::Normal, "Negative to "),
-        (StringKind::Math, "-10"),
-    ] },
-];
+            Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: -1, description: vec![
+                (StringKind::Normal, "Negative to ".to_string()),
+                (StringKind::Math, "-10".to_string()),
+            ] },
+        ]
+    })
+}
 
-pub const MULTIPLICATION_DIFFICULTIES: &[Difficulty] = &[
-    Difficulty { op: Op::Times, low: 2, high: 5, multiplier: 1, description: &[
-        (StringKind::Math, "2"),
-        (StringKind::Normal, " to "),
-        (StringKind::Math, "5"),
-        (StringKind::Normal, " Times Tables"),
-    ] },
+pub fn multiplication_difficulties() -> &'static [Difficulty] {
+    static MEM: OnceLock<Vec<Difficulty>> = OnceLock::new();
+    MEM.get_or_init(|| {
+        vec![
+            Difficulty { op: Op::Times, low: 2, high: 5, multiplier: 1, description: vec![
+                (StringKind::Math, "2".to_string()),
+                (StringKind::Normal, " to ".to_string()),
+                (StringKind::Math, "5".to_string()),
+                (StringKind::Normal, " Times Tables".to_string()),
+            ] },
 
-    Difficulty { op: Op::Times, low: 6, high: 12, multiplier: 1, description: &[
-        (StringKind::Math, "6"),
-        (StringKind::Normal, " to "),
-        (StringKind::Math, "12"),
-        (StringKind::Normal, " Times Tables"),
-    ] },
+            Difficulty { op: Op::Times, low: 6, high: 12, multiplier: 1, description: vec![
+                (StringKind::Math, "6".to_string()),
+                (StringKind::Normal, " to ".to_string()),
+                (StringKind::Math, "12".to_string()),
+                (StringKind::Normal, " Times Tables".to_string()),
+            ] },
 
-    Difficulty { op: Op::Times, low: 2, high: 12, multiplier: 1, description: &[
-        (StringKind::Math, "2"),
-        (StringKind::Normal, " to "),
-        (StringKind::Math, "12"),
-        (StringKind::Normal, " Times Tables"),
-    ] },
+            Difficulty { op: Op::Times, low: 2, high: 12, multiplier: 1, description: vec![
+                (StringKind::Math, "2".to_string()),
+                (StringKind::Normal, " to ".to_string()),
+                (StringKind::Math, "12".to_string()),
+                (StringKind::Normal, " Times Tables".to_string()),
+            ] },
 
-    Difficulty { op: Op::Times, low: 2, high: 12, multiplier: 10, description: &[
-        (StringKind::Math, "2"),
-        (StringKind::Normal, " to "),
-        (StringKind::Math, "12"),
-        (StringKind::Normal, " Multiples of "),
-        (StringKind::Math, "10"),
-    ] },
-];
+            Difficulty { op: Op::Times, low: 2, high: 12, multiplier: 10, description: vec![
+                (StringKind::Math, "2".to_string()),
+                (StringKind::Normal, " to ".to_string()),
+                (StringKind::Math, "12".to_string()),
+                (StringKind::Normal, " Multiples of ".to_string()),
+                (StringKind::Math, "10".to_string()),
+            ] },
+        ]
+    })
+}

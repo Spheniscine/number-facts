@@ -1,7 +1,7 @@
 use rand::{rng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 
-use super::{Audio, Difficulty, Fact, Feedback, FeedbackImpl, Mark, Op, SettingsState, ADDITION_DIFFICULTIES};
+use super::{addition_difficulties, Audio, Difficulty, Fact, Feedback, FeedbackImpl, Mark, Op, SettingsState};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ScreenState {
@@ -31,7 +31,7 @@ impl GameState {
         let mut ops = [Op::Plus, Op::Minus];
 
         let mut res = GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. },
-            difficulty: ADDITION_DIFFICULTIES[0].clone(),
+            difficulty: addition_difficulties()[0].clone(),
             screen_state: ScreenState::Settings, settings_cancelable: true };
         res.generate_test();
         res
