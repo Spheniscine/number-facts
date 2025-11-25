@@ -14,7 +14,7 @@ pub struct Difficulty {
     pub description: &'static [(StringKind, &'static str)]
 }
 
-const ADDITION_DIFFICULTIES: &[Difficulty] = &[
+pub const ADDITION_DIFFICULTIES: &[Difficulty] = &[
     Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: 1, description: &[
         (StringKind::Normal, "Up to "),
         (StringKind::Math, "10",)
@@ -46,7 +46,7 @@ const ADDITION_DIFFICULTIES: &[Difficulty] = &[
     ] },
 ];
 
-const MULTIPLICATION_DIFFICULTIES: &[Difficulty] = &[
+pub const MULTIPLICATION_DIFFICULTIES: &[Difficulty] = &[
     Difficulty { op: Op::Times, low: 2, high: 5, multiplier: 1, description: &[
         (StringKind::Math, "2"),
         (StringKind::Normal, " to "),
