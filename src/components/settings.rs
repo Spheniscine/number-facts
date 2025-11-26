@@ -3,12 +3,10 @@ use std::rc::Rc;
 use dioxus::{logger::tracing, prelude::*};
 use strum::IntoEnumIterator;
 
-use crate::{components::Math, game::{Feedback, GameState, ScreenState}};
+use crate::{components::Math, game::{addition_difficulties, multiplication_difficulties, Feedback, GameState, Op, ScreenState, StringKind}};
 
 #[component]
-pub fn RadioButton(name: String, value: String, width: Option<i32>, children: Element) -> Element {
-    // let checked = state.read().difficulty_options.get(&name) == Some(&value);
-
+pub fn RadioButton(name: String, value: String, checked: bool, width: Option<f64>, children: Element) -> Element {
     // let name_ref = name.clone(); let value_ref = value.clone();
     // let onchange = move |_| {
     //     state.write().difficulty_options.insert(name_ref.to_string(), value_ref.to_string());
@@ -26,7 +24,7 @@ pub fn RadioButton(name: String, value: String, width: Option<i32>, children: El
                 r#type: "radio",
                 name: {name.to_string()},
                 value: {value.to_string()},
-                // checked,
+                checked,
             },
             span { 
                 style,
@@ -39,6 +37,10 @@ pub fn RadioButton(name: String, value: String, width: Option<i32>, children: El
 
 #[component]
 pub fn Settings(game_state: Signal<GameState>) -> Element {
+
+    let mut state = use_signal(|| game_state.read().get_settings_state());
+
+    let difficulties = if state.read().difficulty_options.op == Op::Plus {addition_difficulties()} else {multiplication_difficulties()};
 
     rsx! {
         style {
@@ -59,58 +61,40 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                     RadioButton {  
                         name: "op",
                         value: "plus",
+                        checked: state.read().difficulty_options.op == Op::Plus,
                         Math {tex: "+"}, " and ", Math {tex: "-"},
                     },
                     " "
                     RadioButton {  
                         name: "op",
                         value: "times",
+                        checked: state.read().difficulty_options.op == Op::Times,
                         Math {tex: "\\times"}, " and ", Math {tex: "\\div"},
                     },
                 },
                 p {
                     class: "radio-buttons",
-                    RadioButton {
-                        width: 75,
-                        name: "limit",
-                        value: "10",
-                        "Up to ", Math {tex: "10"},
-                    },
-                    br {},
-                    RadioButton {  
-                        width: 75,
-                        name: "limit",
-                        value: "20",
-                        "Up to ", Math {tex: "20"},
-                    },
-                    br {},
-                    RadioButton {  
-                        width: 75,
-                        name: "limit",
-                        value: "50",
-                        "Up to ", Math {tex: "50"},
-                    },
-                    br {},
-                    RadioButton {  
-                        width: 75,
-                        name: "limit",
-                        value: "100",
-                        "Up to ", Math {tex: "100"},
-                    },
-                    br {},
-                    RadioButton {  
-                        width: 75,
-                        name: "limit",
-                        value: "10_100",
-                        "Tens up to ", Math {tex: "100"},
-                    },
-                    br {},
-                    RadioButton {  
-                        width: 75,
-                        name: "limit",
-                        value: "neg_10",
-                        "Negative to ", Math {tex: "-10"},
-                    },
+                    for i in 0..difficulties.len() {
+                        if i > 0 {
+                            br {}
+                        }
+                        RadioButton { 
+                            name: "difficulty_choice",
+                            value: "{i}",
+                            checked: state.read().difficulty_options == difficulties[i],
+                            width: 80.,
+
+                            for (kind, st) in &difficulties[i].description {
+                                if *kind == StringKind::Normal {
+                                    "{st}"
+                                } else {
+                                    Math {
+                                        tex: st,
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
 
             p { 
