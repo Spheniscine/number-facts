@@ -3,19 +3,14 @@ use std::rc::Rc;
 use dioxus::{logger::tracing, prelude::*};
 use strum::IntoEnumIterator;
 
-use crate::{components::Math, game::{addition_difficulties, multiplication_difficulties, Feedback, GameState, Op, ScreenState, StringKind}};
+use crate::{components::Math, game::{addition_difficulties, multiplication_difficulties, Feedback, GameState, Op, ScreenState, SettingsState, StringKind, NAME_DIFFICULTY_CHOICE, NAME_OP, VALUE_OP_PLUS, VALUE_OP_TIMES}};
 
 #[component]
-pub fn RadioButton(name: String, value: String, checked: bool, width: Option<f64>, children: Element) -> Element {
-    // let name_ref = name.clone(); let value_ref = value.clone();
-    // let onchange = move |_| {
-    //     state.write().difficulty_options.insert(name_ref.to_string(), value_ref.to_string());
-    //     let addend_limit = state.read().addend_limit();
-    //     let max_addend = state.read().difficulty_options[LegacyDifficulty::STR_ADDEND_RANGE].rsplit(',').next().unwrap().parse::<i32>().unwrap();
-    //     if max_addend > addend_limit { 
-    //         state.write().difficulty_options.insert(LegacyDifficulty::STR_ADDEND_RANGE.into(), "1,1".into());
-    //     }
-    // };
+pub fn RadioButton(mut state: Signal<SettingsState>, name: String, value: String, checked: bool, width: Option<f64>, children: Element) -> Element {
+    let name_ref = name.clone(); let value_ref = value.clone();
+    let onchange = move |_| {
+        state.write().parse_radio_button_change(&name_ref, &value_ref);
+    };
     let style = if let Some(width) = width {format!("width: {width}rem;")} else {String::new()};
 
     rsx! {
@@ -25,6 +20,7 @@ pub fn RadioButton(name: String, value: String, checked: bool, width: Option<f64
                 name: {name.to_string()},
                 value: {value.to_string()},
                 checked,
+                onchange,
             },
             span { 
                 style,
@@ -59,15 +55,17 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                     class: "radio-buttons",
                     "Operations: ",
                     RadioButton {  
-                        name: "op",
-                        value: "plus",
+                        state,
+                        name: NAME_OP,
+                        value: VALUE_OP_PLUS,
                         checked: state.read().difficulty_options.op == Op::Plus,
                         Math {tex: "+"}, " and ", Math {tex: "-"},
                     },
                     " "
-                    RadioButton {  
-                        name: "op",
-                        value: "times",
+                    RadioButton { 
+                        state, 
+                        name: NAME_OP,
+                        value: VALUE_OP_TIMES,
                         checked: state.read().difficulty_options.op == Op::Times,
                         Math {tex: "\\times"}, " and ", Math {tex: "\\div"},
                     },
@@ -79,7 +77,8 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                             br {}
                         }
                         RadioButton { 
-                            name: "difficulty_choice",
+                            state,
+                            name: NAME_DIFFICULTY_CHOICE,
                             value: "{i}",
                             checked: state.read().difficulty_options == difficulties[i],
                             width: 80.,

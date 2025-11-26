@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 use super::{addition_difficulties, multiplication_difficulties, Difficulty, Op};
+
+pub const NAME_OP: &str = "op";
+pub const VALUE_OP_PLUS: &str = "plus";
+pub const VALUE_OP_TIMES: &str = "times";
+pub const NAME_DIFFICULTY_CHOICE: &str = "difficulty_choice";
 
 #[derive(Clone)]
 pub struct SettingsState {
@@ -26,14 +32,38 @@ impl SettingsState {
         }
     }
 
-    pub fn change_difficulty(&mut self, index: usize) {
+    pub fn change_difficulty(&mut self, index: usize) -> bool {
         self.difficulty_options = match self.op() {
             Op::Plus | Op::Minus => {
-                addition_difficulties().get(index).unwrap_or_else(|| &addition_difficulties()[0]).clone()
+                if index < addition_difficulties().len() {
+                    addition_difficulties()[index].clone()
+                } else { return false; }
             }
             Op::Times | Op::Divide => {
-                multiplication_difficulties().get(index).unwrap_or_else(|| &multiplication_difficulties()[0]).clone()
+                if index < multiplication_difficulties().len() {
+                    multiplication_difficulties()[index].clone()
+                } else { return false; }
             }
+        };
+        true
+    }
+
+    pub fn parse_radio_button_change(&mut self, name: &str, value: &str) -> bool {
+        match name {
+            NAME_OP => {
+                let op = match value {
+                    VALUE_OP_PLUS => Op::Plus,
+                    VALUE_OP_TIMES => Op::Times,
+                    _ => {return false;}
+                };
+                self.change_op(op);
+            }
+            NAME_DIFFICULTY_CHOICE => {
+                let Ok(index) = usize::from_str(value) else {return false};
+                return self.change_difficulty(index);
+            }
+            _ => {return false;}
         }
+        true
     }
 }
