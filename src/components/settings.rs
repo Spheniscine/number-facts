@@ -38,6 +38,45 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
 
     let difficulties = if state.read().difficulty_options.op == Op::Plus {addition_difficulties()} else {multiplication_difficulties()};
 
+    let reset_level_changed = move |evt: Event<FormData>| {
+        state.write().reset_level = evt.checked();
+    };
+
+    let audio_settings_changed = move |evt: Event<FormData>| {
+        state.write().audio_state = evt.value().parse().unwrap_or(100);
+    };
+
+    let do_ok = move |mut game_state: Signal<GameState>| {
+        let not_first = game_state.read().settings_cancelable;
+        game_state.write().apply_settings(state.read().clone());
+        game_state.write().screen_state = ScreenState::Game;
+    };
+    
+    let mut ok = move |_| {
+        do_ok(game_state.clone())
+    };
+    let mut cancel = move |_| {
+        game_state.write().screen_state = ScreenState::Game;
+    };
+
+    let mut onmounted = async move |e: Event<MountedData>| {
+        e.set_focus(true).await;
+    };
+    let mut onkeydown = move |e: Event<KeyboardData>| {
+        let key = e.key();
+        match key {
+            Key::Enter => {
+                do_ok(game_state.clone())
+            }
+            Key::Escape => {
+                if game_state.read().settings_cancelable {
+                    game_state.write().screen_state = ScreenState::Game;
+                }
+            }
+            _ => {}
+        }
+    };
+
     rsx! {
         style {
             "#settingsDialog:focus {{ outline: none; }}"
@@ -48,62 +87,61 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                 line-height: 9rem;
                 color: #000; border-radius: 2rem;",
             tabindex: -1,
-            // onmounted: onmounted,
-            // onkeydown: onkeydown,
-            // if let Difficulty::Legacy(difficulty) = game_state.read().difficulty {
-                p {
-                    class: "radio-buttons",
-                    "Operations: ",
-                    RadioButton {  
-                        state,
-                        name: NAME_OP,
-                        value: VALUE_OP_PLUS,
-                        checked: state.read().difficulty_options.op == Op::Plus,
-                        Math {tex: "+"}, " and ", Math {tex: "-"},
-                    },
-                    " "
-                    RadioButton { 
-                        state, 
-                        name: NAME_OP,
-                        value: VALUE_OP_TIMES,
-                        checked: state.read().difficulty_options.op == Op::Times,
-                        Math {tex: "\\times"}, " and ", Math {tex: "\\div"},
-                    },
+            onmounted: onmounted,
+            onkeydown: onkeydown,
+            p {
+                class: "radio-buttons",
+                "Operations: ",
+                RadioButton {  
+                    state,
+                    name: NAME_OP,
+                    value: VALUE_OP_PLUS,
+                    checked: state.read().difficulty_options.op == Op::Plus,
+                    Math {tex: "+"}, " and ", Math {tex: "-"},
                 },
-                p {
-                    class: "radio-buttons",
-                    for i in 0..difficulties.len() {
-                        if i > 0 {
-                            br {}
-                        }
-                        RadioButton { 
-                            state,
-                            name: NAME_DIFFICULTY_CHOICE,
-                            value: "{i}",
-                            checked: state.read().difficulty_options == difficulties[i],
-                            width: 80.,
+                " "
+                RadioButton { 
+                    state, 
+                    name: NAME_OP,
+                    value: VALUE_OP_TIMES,
+                    checked: state.read().difficulty_options.op == Op::Times,
+                    Math {tex: "\\times"}, " and ", Math {tex: "\\div"},
+                },
+            },
+            p {
+                class: "radio-buttons",
+                for i in 0..difficulties.len() {
+                    if i > 0 {
+                        br {}
+                    }
+                    RadioButton { 
+                        state,
+                        name: NAME_DIFFICULTY_CHOICE,
+                        value: "{i}",
+                        checked: state.read().difficulty_options == difficulties[i],
+                        width: 80.,
 
-                            for (kind, st) in &difficulties[i].description {
-                                if *kind == StringKind::Normal {
-                                    "{st}"
-                                } else {
-                                    Math {
-                                        tex: st,
-                                    }
+                        for (kind, st) in &difficulties[i].description {
+                            if *kind == StringKind::Normal {
+                                "{st}"
+                            } else {
+                                Math {
+                                    tex: st,
                                 }
                             }
                         }
                     }
-                },
+                }
+            },
 
             p { 
                 "Generate new problems: ",
                 input {
                     r#type: "checkbox",
                     style: "width: 4rem; height: 4rem;",
-                    // checked: state.read().reset_level,
-                    // disabled: !game_state.read().settings_cancelable || state.read().difficulty_options != game_state.read().difficulty.to_map(),
-                    // onchange: reset_level_changed
+                    checked: state.read().reset_level,
+                    disabled: !game_state.read().settings_cancelable || state.read().difficulty_options != game_state.read().difficulty,
+                    onchange: reset_level_changed
                 }
             },
 
@@ -112,26 +150,25 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                 input {
                     r#type: "range",
                     style: "width: 50rem; height: 4rem;",
-                    min: 0, max: 100, step: 5, 
-                    value: 100,
-                    // value: state.read().audio_state,
-                    // oninput: audio_settings_changed
+                    min: 0, max: 100, step: 5,
+                    value: state.read().audio_state,
+                    oninput: audio_settings_changed
                 },
-                " XX",
+                " {state.read().audio_state}",
             },
 
             p { 
                 button {
                     r#type: "button",
                     style: "width: 20rem; font-size: 5rem; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;",
-                    // onclick: ok,
+                    onclick: ok,
                     "OK"
                 },
                 " ",
                 button {
                     r#type: "button",
                     style: "width: 20rem; font-size: 5rem; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;",
-                    // onclick: cancel,
+                    onclick: cancel,
                     "Cancel"
                 },
             },

@@ -1,3 +1,4 @@
+use dioxus::logger::tracing::info;
 use rand::{rng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 
@@ -244,5 +245,13 @@ impl GameState {
             audio_state: (self.feedback.get_audio_state() * 100.).round() as i32,
             reset_level: !self.settings_cancelable,
         }
+    }
+
+    pub fn apply_settings(&mut self, settings: SettingsState) {
+        self.feedback.set_audio_state(settings.audio_state as f64 / 100.);
+
+        self.difficulty = settings.difficulty_options;
+        info!("{:?}", self.difficulty);
+        // todo: apply difficulty
     }
 }
