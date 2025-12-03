@@ -36,3 +36,9 @@ pub use audio_preloader::AudioPreloader;
 
 mod settings;
 pub use settings::*;
+
+mod audio_icon;
+pub use audio_icon::*;
+
+mod settings_icon;
+pub use settings_icon::*;

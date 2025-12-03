@@ -254,4 +254,9 @@ impl GameState {
         info!("{:?}", self.difficulty);
         // todo: apply difficulty
     }
+
+    pub fn toggle_audio(&mut self) {
+        self.feedback.toggle_audio();
+        // LocalStorage.save_game_state(&self);
+    }
 }
