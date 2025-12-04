@@ -47,7 +47,7 @@ pub fn addition_difficulties() -> &'static [Difficulty] {
                 (StringKind::Math, "100".to_string()),
             ] },
 
-            Difficulty { op: Op::Plus, low: 0, high: 10, multiplier: -1, description: vec![
+            Difficulty { op: Op::Plus, low: -10, high: 10, multiplier: -1, description: vec![
                 (StringKind::Normal, "Negative to ".to_string()),
                 (StringKind::Math, "-10".to_string()),
             ] },
