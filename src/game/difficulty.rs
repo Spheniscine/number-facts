@@ -14,8 +14,8 @@ pub struct Difficulty {
     pub op: Op,
     pub low: i32,
     pub high: i32,
-    pub multiplier: i32,
-    pub description: Vec<(StringKind, String)>
+    pub multiplier: i32, // if negative, means at least one of the operands must be negative
+    pub description: Vec<(StringKind, String)>,
 }
 
 pub fn addition_difficulties() -> &'static [Difficulty] {
