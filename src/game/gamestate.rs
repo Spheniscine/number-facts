@@ -1,7 +1,8 @@
+use dioxus::logger::tracing::info;
 use rand::{rng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 
-use super::{Audio, Fact, Feedback, FeedbackImpl, Mark, Op};
+use super::{addition_difficulties, difficulty, Audio, Difficulty, Fact, Feedback, FeedbackImpl, Mark, Op, SettingsState};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ScreenState {
@@ -17,6 +18,7 @@ pub struct GameState {
     pub marks: Option<[Mark; 4]>,
     pub feedback: FeedbackImpl,
     pub screen_state: ScreenState,
+    pub difficulty: Difficulty,
     pub settings_cancelable: bool,
 }
 
@@ -30,9 +32,128 @@ impl GameState {
         let mut ops = [Op::Plus, Op::Minus];
 
         let mut res = GameState { facts, solution, operands, ops, marks: None, feedback: FeedbackImpl { audio_state: 1., prev_audio_state: 1. },
-            screen_state: ScreenState::Settings, settings_cancelable: true };
+            difficulty: addition_difficulties()[0].clone(),
+            screen_state: ScreenState::Settings, settings_cancelable: false };
         res.generate_test();
         res
+    }
+
+    pub fn generate(&mut self, difficulty: Difficulty) {
+        let rng = &mut rng();
+        let (a, b, c, mut solution, mut ops) = match difficulty.op {
+            Op::Plus | Op::Minus => {
+                let low = difficulty.low;
+                let high = difficulty.high;
+                let mult = difficulty.multiplier;
+        
+                let [a, b, c] = loop {
+                    let mut x = rng.random_range(low..=high) * mult;
+                    let mut y = rng.random_range(low..high) * mult;
+                    if y >= x { y += mult; }
+                    if y < x { std::mem::swap(&mut x, &mut y); }
+                    if y - x == x { continue; }
+
+                    let ans = [x, y-x, y];
+
+                    // if mult is negative, ensure one of the values is negative
+                    if mult >= 0 || ans.iter().any(|&x| x < 0) {
+                        break ans;
+                    }
+                };
+
+                let mut solution = [
+                    Fact {
+                        operand1: Some(a),
+                        op: Some(Op::Plus),
+                        operand2: Some(b),
+                        result: Some(c),
+                        is_active: false,
+                    },
+                    Fact {
+                        operand1: Some(b),
+                        op: Some(Op::Plus),
+                        operand2: Some(a),
+                        result: Some(c),
+                        is_active: false,
+                    },
+                    Fact {
+                        operand1: Some(c),
+                        op: Some(Op::Minus),
+                        operand2: Some(a),
+                        result: Some(b),
+                        is_active: false,
+                    },
+                    Fact {
+                        operand1: Some(c),
+                        op: Some(Op::Minus),
+                        operand2: Some(b),
+                        result: Some(a),
+                        is_active: false,
+                    },
+                ];
+                (a, b, c, solution, [Op::Plus, Op::Minus])
+            },
+            Op::Times | Op::Divide => {
+                let low = difficulty.low;
+                let high = difficulty.high;
+                let mult = difficulty.multiplier;
+        
+                let a = rng.random_range(low..=high) * mult;
+                let b = loop {
+                    let b = rng.random_range(1..=12);
+                    if b != a { break b; }
+                };
+                let c = a * b;
+
+                let mut solution = [
+                    Fact {
+                        operand1: Some(a),
+                        op: Some(Op::Times),
+                        operand2: Some(b),
+                        result: Some(c),
+                        is_active: false,
+                    },
+                    Fact {
+                        operand1: Some(b),
+                        op: Some(Op::Times),
+                        operand2: Some(a),
+                        result: Some(c),
+                        is_active: false,
+                    },
+                    Fact {
+                        operand1: Some(c),
+                        op: Some(Op::Divide),
+                        operand2: Some(a),
+                        result: Some(b),
+                        is_active: false,
+                    },
+                    Fact {
+                        operand1: Some(c),
+                        op: Some(Op::Divide),
+                        operand2: Some(b),
+                        result: Some(a),
+                        is_active: false,
+                    },
+                ];
+                (a, b, c, solution, [Op::Times, Op::Divide])
+            },
+        };
+
+        let mut facts = [Fact::default(); 4];
+        facts[0].is_active = true;
+
+        let mut operands = [a, b, c];
+
+        solution.sort();
+        operands.shuffle(rng);
+        ops.shuffle(rng);
+
+        self.facts = facts;
+        self.solution = solution;
+        self.operands = operands;
+        self.ops = ops;
+        self.marks = None;
+        self.difficulty = difficulty;
     }
 
     fn generate_test(&mut self) {
@@ -222,7 +343,7 @@ impl GameState {
         if !self.is_complete() { return; }
         
         if self.is_correct() {
-            self.generate_test(); // todo
+            self.generate(self.difficulty.clone());
         } else {
             let mut facts = [Fact::default(); 4];
 
@@ -234,5 +355,26 @@ impl GameState {
             self.marks = None;
             self.update_active();
         }
+    }
+
+    pub fn get_settings_state(&self) -> SettingsState {
+        SettingsState {
+            difficulty_options: self.difficulty.clone(),
+            audio_state: (self.feedback.get_audio_state() * 100.).round() as i32,
+            reset_level: !self.settings_cancelable,
+        }
+    }
+
+    pub fn apply_settings(&mut self, settings: SettingsState) {
+        self.feedback.set_audio_state(settings.audio_state as f64 / 100.);
+
+        if self.difficulty != settings.difficulty_options || settings.reset_level {
+            self.generate(settings.difficulty_options);
+        }
+    }
+
+    pub fn toggle_audio(&mut self) {
+        self.feedback.toggle_audio();
+        // LocalStorage.save_game_state(&self);
     }
 }

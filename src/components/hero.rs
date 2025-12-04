@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use rand::{rng, Rng};
 use strum::IntoEnumIterator;
 
-use crate::{components::{operand::OperandValue, Advance, AudioPreloader, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Settings, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt, ScreenState}};
+use crate::{components::{operand::OperandValue, Advance, AudioIcon, AudioPreloader, Check, FactComponent, Math, OpComponent, OpEntity, OpValue, OperandComponent, OperandEntity, Settings, SettingsIcon, Undo}, game::{self, Fact, GameState, Mark, Op, OptionMarkExt, ScreenState}};
 
 #[component]
 pub fn Hero() -> Element {
@@ -77,6 +77,16 @@ pub fn Hero() -> Element {
                             game_state,
                         },
                     }
+                },
+
+                AudioIcon {  
+                    style: "position: absolute; left: 69rem; top: 164rem;",
+                    game_state,
+                },
+
+                SettingsIcon {  
+                    style: "position: absolute; left: 86rem; top: 164.7rem; width: 10rem; height: 10rem;",
+                    game_state,
                 },
 
                 div {
