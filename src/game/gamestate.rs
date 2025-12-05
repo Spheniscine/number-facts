@@ -154,6 +154,7 @@ impl GameState {
         self.ops = ops;
         self.marks = None;
         self.difficulty = difficulty;
+        self.settings_cancelable = true;
     }
 
     fn generate_test(&mut self) {

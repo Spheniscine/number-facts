@@ -6,10 +6,13 @@ use strum::IntoEnumIterator;
 use crate::{components::Math, game::{addition_difficulties, multiplication_difficulties, Feedback, GameState, Op, ScreenState, SettingsState, StringKind, NAME_DIFFICULTY_CHOICE, NAME_OP, VALUE_OP_PLUS, VALUE_OP_TIMES}};
 
 #[component]
-pub fn RadioButton(mut state: Signal<SettingsState>, name: String, value: String, checked: bool, width: Option<f64>, children: Element) -> Element {
+pub fn RadioButton(mut state: Signal<SettingsState>, game_state: Signal<GameState>, name: String, value: String, checked: bool, width: Option<f64>, children: Element) -> Element {
     let name_ref = name.clone(); let value_ref = value.clone();
     let onchange = move |_| {
         state.write().parse_radio_button_change(&name_ref, &value_ref);
+        if state.read().difficulty_options != game_state.read().difficulty {
+            state.write().reset_level = true;
+        }
     };
     let style = if let Some(width) = width {format!("width: {width}rem;")} else {String::new()};
 
@@ -93,7 +96,7 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                 class: "radio-buttons",
                 "Operations: ",
                 RadioButton {  
-                    state,
+                    state, game_state,
                     name: NAME_OP,
                     value: VALUE_OP_PLUS,
                     checked: state.read().difficulty_options.op == Op::Plus,
@@ -101,7 +104,7 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                 },
                 " "
                 RadioButton { 
-                    state, 
+                    state, game_state,
                     name: NAME_OP,
                     value: VALUE_OP_TIMES,
                     checked: state.read().difficulty_options.op == Op::Times,
@@ -115,7 +118,7 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                         br {}
                     }
                     RadioButton { 
-                        state,
+                        state, game_state,
                         name: NAME_DIFFICULTY_CHOICE,
                         value: "{i}",
                         checked: state.read().difficulty_options == difficulties[i],
@@ -164,13 +167,15 @@ pub fn Settings(game_state: Signal<GameState>) -> Element {
                     onclick: ok,
                     "OK"
                 },
-                " ",
-                button {
-                    r#type: "button",
-                    style: "width: 20rem; font-size: 5rem; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;",
-                    onclick: cancel,
-                    "Cancel"
-                },
+                if game_state.read().settings_cancelable {
+                    " ",
+                    button {
+                        r#type: "button",
+                        style: "width: 20rem; font-size: 5rem; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;",
+                        onclick: cancel,
+                        "Cancel"
+                    },
+                }
             },
 
             p {
