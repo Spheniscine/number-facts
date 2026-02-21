@@ -5,14 +5,14 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
-  <link rel="preload" as="script" href="/number-facts/assets/number-facts-aaa555cc5b3fcd02.js" crossorigin><link rel="preload" as="fetch" type="application/wasm" href="/number-facts/assets/number-facts_bg-a9495d7db6aaa225.wasm" crossorigin></head>
+  <link rel="preload" as="script" href="/number-facts/assets/number-facts-aaa555cc5b3fcd02.js" crossorigin><link rel="preload" as="fetch" type="application/wasm" href="/number-facts/assets/number-facts_bg-e369e8da1d3580e8.wasm" crossorigin></head>
   <body>
     <div id="main"></div>
   <script>
             // We can't use a module script here because we need to start the script immediately when streaming
             import("/number-facts/assets/number-facts-aaa555cc5b3fcd02.js").then(
                 ({ default: init }) => {
-                init("/number-facts/assets/number-facts_bg-a9495d7db6aaa225.wasm").then((wasm) => {
+                init("/number-facts/assets/number-facts_bg-e369e8da1d3580e8.wasm").then((wasm) => {
                     if (wasm.__wbindgen_start == undefined) {
                     wasm.main();
                     }
